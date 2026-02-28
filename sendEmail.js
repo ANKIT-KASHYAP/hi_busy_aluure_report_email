@@ -15,9 +15,7 @@ const reportUrl = `https://${repo.split("/")[0]}.github.io/${repo.split("/")[1]}
 
 async function sendEmail() {
   let transporter = nodemailer.createTransport({
-    host: "smtp.office365.com",
-    port: 587,
-    secure: false,
+    service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
