@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
-import dotenv from "dotenv";
-import path from "path";
-dotenv.config({ path: path.resolve(__dirname, ".env") });   
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config({ path: path.resolve(__dirname, ".env") });
 const repo = process.env.GITHUB_REPOSITORY;
 const reportUrl = `https://${repo.split("/")[0]}.github.io/${repo.split("/")[1]}/`;
 
