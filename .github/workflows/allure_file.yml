@@ -54,7 +54,7 @@ jobs:
         echo "REPORT_URL=https://${{ github.repository_owner }}.github.io/${{ github.repository }}" >> $GITHUB_ENV
 
     - name: Wait for GitHub Pages to Update
-      run: Start-Sleep -Seconds 60
+      run: Start-Sleep -Seconds 40
 
     - name: Send Email with Report Link
       run: node sendEmail.js
