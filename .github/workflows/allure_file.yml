@@ -24,11 +24,10 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    # 🔥 Clean Old Reports (VERY IMPORTANT)
     - name: Clean Old Allure Reports
       run: |
-        rm -rf allure-results
-        rm -rf allure-report
+       if (Test-Path "allure-results") { Remove-Item "allure-results" -Recurse -Force }
+       if (Test-Path "allure-report") { Remove-Item "allure-report" -Recurse -Force }
 
     - name: Run Playwright Tests
       run: npm run test
