@@ -1,12 +1,26 @@
 const nodemailer = require("nodemailer");
 
-// ✅ Static GitHub Pages Allure Report URL
-const reportUrl = "https://ankit-kashyap.github.io/hi_busy_aluure_report_email/";
-
-// ✅ Environment Variables (from GitHub Secrets)
+// 📍 Determine report URL
+// if a REPORT_URL env var is provided it takes precedence, otherwise
+// construct one from the repo name (owner/repo) using GitHub Pages pattern.
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 const EMAIL_TO = process.env.EMAIL_TO;
+
+let reportUrl = process.env.REPORT_URL;
+if (!reportUrl) {
+  const repo = process.env.GITHUB_REPOSITORY || '';
+  if (repo) {
+    const [owner, name] = repo.split('/');
+    reportUrl = `https://${owner}.github.io/${name}/`;
+  }
+}
+
+// if we still don't have a URL, warn – the sending will continue but link
+// may be undefined.
+if (!reportUrl) {
+  console.warn('REPORT_URL could not be determined; check GITHUB_REPOSITORY or set REPORT_URL.');
+}
 
 // ✅ Safety Check
 if (!EMAIL_USER || !EMAIL_PASS || !EMAIL_TO) {
