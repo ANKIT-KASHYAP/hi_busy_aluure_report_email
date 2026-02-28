@@ -1,44 +1,59 @@
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
-const path = require("path");
-dotenv.config({ path: path.resolve(__dirname, ".env") });
-const repo = process.env.GITHUB_REPOSITORY;
+
+// ✅ Static GitHub Pages Allure Report URL
+const reportUrl = "https://ankit-kashyap.github.io/hi_busy_aluure_report_email/";
+
+// ✅ Environment Variables (from GitHub Secrets)
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 const EMAIL_TO = process.env.EMAIL_TO;
 
-if (!EMAIL_USER || !EMAIL_PASS) {
-  console.error('Missing EMAIL_USER or EMAIL_PASS.\n- For local runs: create a .env file with EMAIL_USER and EMAIL_PASS.\n- For CI: set repository secrets and ensure they are passed into the job as env vars.');
+// ✅ Safety Check
+if (!EMAIL_USER || !EMAIL_PASS || !EMAIL_TO) {
+  console.error("Missing EMAIL_USER / EMAIL_PASS / EMAIL_TO in environment variables.");
   process.exit(1);
 }
-const reportUrl = `https://${repo.split("/")[0]}.github.io/${repo.split("/")[1]}/`;
 
 async function sendEmail() {
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  try {
+    let transporter = nodemailer.createTransport({
+      service: "gmail", // ⚠ Change if not using Gmail
+      auth: {
+        user: EMAIL_USER,
+        pass: EMAIL_PASS,
+      },
+    });
 
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_TO,
-    subject: "Automation Test Execution Report",
-    html: `
-      <h2>Automation Execution Completed ✅</h2>
-      <p>Please check the Allure Report below:</p>
-      <a href="${reportUrl}">${reportUrl}</a>
-    `,
-  });
+    await transporter.sendMail({
+      from: EMAIL_USER,
+      to: EMAIL_TO,
+      subject: "Allure Automation Report",
+      html: `
+        <h2>Automation Execution Completed ✅</h2>
+        <p>Please check the updated Allure Report below:</p>
 
-  console.log("Email sent successfully!");
+        <a href="${reportUrl}"
+           style="display:inline-block;
+                  padding:10px 20px;
+                  background-color:#0078D7;
+                  color:#ffffff;
+                  text-decoration:none;
+                  border-radius:5px;
+                  font-weight:bold;">
+           View Allure Report
+        </a>
+
+        <br><br>
+        Regards,<br>
+        Ankit
+      `,
+    });
+
+    console.log("Email sent successfully!");
+  } catch (err) {
+    console.error("Failed to send email:", err.message);
+    process.exit(1);
+  }
 }
 
-try {
-  sendEmail();
-} catch (err) {
-  console.error('Failed to send email:', err && err.message ? err.message : err);
-  process.exit(1);
-}
+sendEmail();

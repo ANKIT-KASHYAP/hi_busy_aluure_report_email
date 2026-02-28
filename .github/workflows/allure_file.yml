@@ -39,8 +39,9 @@ jobs:
         publish_dir: ./allure-report
 
     - name: Send Email with Report Link
+      run: node sendEmail.js
       env:
         EMAIL_USER: ${{ secrets.EMAIL_USER }}
         EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
         EMAIL_TO: ${{ secrets.EMAIL_TO }}
-      run: node sendEmail.js
+      
