@@ -46,6 +46,9 @@ jobs:
         publish_dir: ./allure-report
         force_orphan: true
 
+    - name: Wait for GitHub Pages to Update
+      run: Start-Sleep -Seconds 50
+
     - name: Send Email with Report Link
       run: node sendEmail.js
       env:
