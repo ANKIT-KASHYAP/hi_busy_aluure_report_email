@@ -47,7 +47,7 @@ jobs:
         force_orphan: true
 
     - name: Wait for GitHub Pages to Update
-      run: Start-Sleep -Seconds 50
+      run: Start-Sleep -Seconds 60
 
     - name: Send Email with Report Link
       run: node sendEmail.js
